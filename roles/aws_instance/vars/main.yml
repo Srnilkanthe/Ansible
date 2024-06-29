@@ -1,0 +1,9 @@
+---
+# vars file for aws_instance
+
+instance_type: t2.micro
+security_group: default
+region: ap-south-1
+image_id: ami-0f58b397bc5c1f2e8
+tags: Testing
+vpc_subnet_id: subnet-036d9ade1704ab7f4

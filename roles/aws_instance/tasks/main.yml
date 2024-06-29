@@ -1,0 +1,17 @@
+---
+# tasks file for aws_instance
+- name: Launch an instance with a public IP address
+  amazon.aws.ec2_instance:
+    name: test_vm4
+    key_name: test_key2
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    instance_type: "{{ instance_type }}" 
+    security_group: "{{ security_group }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_access_key: "{{ aws_secret_access_key }}"
+    image_id: "{{ image_id }}"
+    network:
+      assign_public_ip: true
+    
+

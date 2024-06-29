@@ -1,0 +1,16 @@
+# copy , run and store logs
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: copy shell script
+      ansible.builtin.copy:
+        src: ~/srn/scripts/assignment4.sh
+        dest: /home/ubuntu/srn
+        owner: root
+        group: root
+        mode: '755'
+    - name: run shell script 
+      shell:
+        #!/bin/bash
+         /home/ubuntu/srn > .script_res.log 
