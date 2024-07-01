@@ -1,0 +1,39 @@
+#create 3 different instance and manage them
+- hosts: localhost
+  connection: local
+  vars:
+    instance_type: t2.micro
+    security_group: default
+    region: ap-south-1
+    vpc_subnet_id: subnet-036d9ade1704ab7f4
+  tasks:
+   - name: Launch an instance with a public IP address
+     amazon.aws.ec2_instance:
+      name: "{{ item.name }}"
+      key_name: test_key2
+      vpc_subnet_id: "{{ vpc_subnet_id }}"
+      instance_type: "{{ instance_type }}" 
+      security_group: "{{ security_group }}"
+      region: "{{ region }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_access_key: "{{ aws_secret_access_key }}"
+      image_id: "{{ item.image_id }}"
+      network:
+          assign_public_ip: true
+      tags:
+        environment: "{{ item.name }}"
+     register: detals
+     loop:
+      - { image_id: ami-04f8d7ed2f1a54b14, name: amazon }
+      - { image_id: ami-0f58b397bc5c1f2e8, name: ubuntu1 }
+      - { image_id: ami-0f58b397bc5c1f2e8, name: ubuntu2 }
+   
+   - name: Store the public IP address in a file
+     local_action: 
+        module: copy
+        content: "{{ detals.[ansible_loop.index0].instances[0].public_ip }}"
+        dest: "{{ item.name }}_public_ip.txt"
+     loop:
+      - { image_id: ami-04f8d7ed2f1a54b14, name: amazon }
+      - { image_id: ami-0f58b397bc5c1f2e8, name: ubuntu1 }
+      - { image_id: ami-0f58b397bc5c1f2e8, name: ubuntu2 }
