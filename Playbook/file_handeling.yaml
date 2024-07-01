@@ -1,0 +1,22 @@
+- name: Directory Creation Example
+  hosts: all
+  tasks:
+    - name: Create a directory
+      file:
+        path: /home/example_dir
+        state: directory
+        mode: '0755'
+                                             
+    - name: Copy a file to the target hosts
+      copy:
+        src: /local/path/to/file.txt
+        dest: /home/example_dir
+
+    - name: Remove the specified file
+      file:
+        path: /home/example_dirfile.txt
+        state: absent
+      tags: delete_file
+    - name: Rename or move the specified file
+      command: mv /path/to/your/oldfile.txt /path/to/your/newfile.txt
+      tags: rename_file

@@ -1,0 +1,27 @@
+---
+- name: Install and Configure MySQL
+  hosts: all
+  vars:
+    mysql_root_password: root_password
+  tasks:
+    - name: Install MySQL server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Start and enable MySQL service
+      systemd:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Set MySQL root password
+      mysql_user:
+        name: root
+        host: "{{ item }}"
+        password: "{{ mysql_root_password }}"
+        priv: '*.*:ALL,GRANT'
+      with_items:
+        - 'localhost'
+        - '127.0.0.1'
+        - '::1'

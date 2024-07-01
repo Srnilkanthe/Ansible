@@ -1,0 +1,25 @@
+- name: Create a User and Set Up SSH Key Authentication
+  hosts: all
+  vars:
+    username: ansible_user
+    ssh_key: "{{ lookup('file', '/.ssh/id_rsa.pub') }}"
+  tasks:
+    - name: Create a new user
+      user:
+        name: "{{ username }}"
+        state: present
+        shell: /bin/bash
+
+    - name: Create .ssh directory
+      file:
+        path: "/home/{{ username }}/.ssh"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0700'
+
+    - name: Add SSH key to authorized_keys
+      authorized_key:
+        user: "{{ username }}"
+        state: present
+        key: "{{ ssh_key }}"

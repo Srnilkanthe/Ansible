@@ -1,0 +1,34 @@
+# deploy_nodejs_app.yml
+---
+- name: Deploy Node.js Application
+  hosts: all
+  become: yes
+  vars:
+    nodejs_version: "14.x"
+  tasks:
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: Clone the application repository
+      git:
+        repo: 'https://github.com/user/sample-nodejs-app.git'
+        dest: /home/ubuntu/sample-nodejs-app
+
+    - name: Install application dependencies
+      npm:
+        path: /home/ubuntu/sample-nodejs-app
+        state: present
+
+    - name: Start the Node.js application
+      command: npm start
+      args:
+        chdir: /home/ubuntu/sample-nodejs-app
+      async: 1
+      poll: 0
