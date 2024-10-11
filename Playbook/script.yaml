@@ -14,3 +14,26 @@
       shell:
         #!/bin/bash
          /home/ubuntu/srn > .script_res.log 
+
+---
+- name: Run Shell Script on Remote Host
+  hosts: all
+  become: yes  # Use this if you need elevated privileges
+  tasks:
+    - name: Copy the shell script to the remote host
+      copy:
+        src: ./scripts/my_script.sh  # Path to your local shell script
+        dest: /tmp/my_script.sh       # Path on the remote host
+        mode: '0755'                  # Make the script executable
+
+    - name: Execute the shell script
+      shell: /tmp/my_script.sh       # Run the script
+      register: script_output         # Capture the output
+
+    - name: Display the output of the script
+      debug:
+        var: script_output.stdout      # Show the standard output of the script
+
+    - name: Display any errors from the script
+      debug:
+        var: script_output.stderr       # Show any errors if they occurred
